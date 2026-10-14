@@ -62,6 +62,7 @@ export function WhenPanel({ initial, onDone }: WhenPanelProps) {
                     <td key={p.id} className="p-1">
                       <button
                         type="button"
+                        aria-label={`${d.label} ${p.label}`}
                         aria-pressed={keys.includes(k)}
                         onClick={() => toggle(k)}
                         className={`${chip(keys.includes(k))} w-full`}
