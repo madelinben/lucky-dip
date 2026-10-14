@@ -11,7 +11,7 @@ Two ways this repo ships, from the same `src/`:
 | Target | How |
 |---|---|
 | **GitHub Pages** (`madelinben.github.io/lucky-dip/`) | `pnpm build:demo` builds `demo/` (sample data) into `docs/` (Pages source: `main` / `/docs`) |
-| **get-out-there** (Cloudflare) | imported as workspace package `@get-out-there/feature-lucky-dip` (`LuckyDipApp`) with real events from the database |
+| **get-out-there** (Cloudflare) | imported as workspace package `@get-out-there/lucky-dip` (`LuckyDipApp`) with real events from the database |
 
 ```bash
 pnpm install
