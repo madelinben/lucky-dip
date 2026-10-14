@@ -1,5 +1,4 @@
-import type { PriceBand } from "./types";
-import type { Party } from "./types";
+import type { Party, PriceBand } from "./types";
 
 const KEY = "lucky-dip:prefs";
 
