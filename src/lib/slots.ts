@@ -9,7 +9,8 @@ export const DAYPARTS: { id: Daypart; label: string; from: number; to: number }[
 ];
 
 const pad = (n: number) => String(n).padStart(2, "0");
-export const dayKey = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+export const dayKey = (d: Date) =>
+  `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 /** "2026-10-17|evening" */
 export const slotKey = (day: string, part: Daypart) => `${day}|${part}`;
 
@@ -22,7 +23,8 @@ export function nextDays(from: Date, n = 7): Day[] {
     const dow = d.getDay();
     return {
       key: dayKey(d),
-      label: i === 0 ? "Today" : d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric" }),
+      label:
+        i === 0 ? "Today" : d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric" }),
       weekend: dow === 0 || dow === 6,
     };
   });
@@ -35,7 +37,12 @@ export function slotsFrom(keys: string[]): Slot[] {
     const dp = DAYPARTS.find((p) => p.id === part);
     const [y, m, d] = day.split("-").map(Number);
     if (!dp || !y || !m || !d) return [];
-    return [{ start: new Date(y, m - 1, d, dp.from).getTime(), end: new Date(y, m - 1, d, dp.to).getTime() }];
+    return [
+      {
+        start: new Date(y, m - 1, d, dp.from).getTime(),
+        end: new Date(y, m - 1, d, dp.to).getTime(),
+      },
+    ];
   });
 }
 
@@ -50,7 +57,9 @@ export function quickPick(kind: QuickPick, now: Date, days: Day[]): string[] {
     case "tonight":
       return [slotKey(dayKey(now), "evening")];
     case "weekend":
-      return days.filter((d) => d.weekend).flatMap((d) => DAYPARTS.map((p) => slotKey(d.key, p.id)));
+      return days
+        .filter((d) => d.weekend)
+        .flatMap((d) => DAYPARTS.map((p) => slotKey(d.key, p.id)));
     case "anytime":
       return [];
     default:

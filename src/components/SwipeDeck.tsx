@@ -7,7 +7,15 @@ const THRESHOLD = 90;
 
 type Choice = "like" | "skip";
 
-function Card({ cat, depth, onSwipe }: { cat: Category; depth: number; onSwipe: (c: Choice) => void }) {
+function Card({
+  cat,
+  depth,
+  onSwipe,
+}: {
+  cat: Category;
+  depth: number;
+  onSwipe: (c: Choice) => void;
+}) {
   const [dx, setDx] = useState(0);
   const [drag, setDrag] = useState(false);
   const startX = useRef(0);
@@ -30,7 +38,9 @@ function Card({ cat, depth, onSwipe }: { cat: Category; depth: number; onSwipe: 
         touchAction: "none",
         cursor: top ? (drag ? "grabbing" : "grab") : "default",
         transition: drag ? "none" : "transform 0.25s ease",
-        transform: top ? `translateX(${dx}px) rotate(${dx * 0.05}deg)` : `translateY(${depth * 12}px) scale(${1 - depth * 0.05})`,
+        transform: top
+          ? `translateX(${dx}px) rotate(${dx * 0.05}deg)`
+          : `translateY(${depth * 12}px) scale(${1 - depth * 0.05})`,
       }}
       onPointerDown={(e) => {
         if (!top) return;
@@ -42,13 +52,22 @@ function Card({ cat, depth, onSwipe }: { cat: Category; depth: number; onSwipe: 
       onPointerUp={end}
       onPointerCancel={end}
     >
-      <span className="pointer-events-none absolute left-4 top-4 -rotate-12 rounded-xl border-4 border-emerald-500 px-3 py-1 text-2xl font-black text-emerald-500" style={{ opacity: Math.max(0, Math.min(1, dx / THRESHOLD)) }}>
+      <span
+        className="pointer-events-none absolute left-4 top-4 -rotate-12 rounded-xl border-4 border-emerald-500 px-3 py-1 text-2xl font-black text-emerald-500"
+        style={{ opacity: Math.max(0, Math.min(1, dx / THRESHOLD)) }}
+      >
         YES
       </span>
-      <span className="pointer-events-none absolute right-4 top-4 rotate-12 rounded-xl border-4 border-rose-500 px-3 py-1 text-2xl font-black text-rose-500" style={{ opacity: Math.max(0, Math.min(1, -dx / THRESHOLD)) }}>
+      <span
+        className="pointer-events-none absolute right-4 top-4 rotate-12 rounded-xl border-4 border-rose-500 px-3 py-1 text-2xl font-black text-rose-500"
+        style={{ opacity: Math.max(0, Math.min(1, -dx / THRESHOLD)) }}
+      >
         NOPE
       </span>
-      <span className="grid size-28 place-items-center rounded-full text-white" style={{ backgroundColor: colour }}>
+      <span
+        className="grid size-28 place-items-center rounded-full text-white"
+        style={{ backgroundColor: colour }}
+      >
         <CategoryIcon name={cat.icon} />
       </span>
       <h3 className="text-center text-3xl font-black text-slate-900">{cat.name}</h3>
@@ -81,32 +100,41 @@ export function SwipeDeck({ categories, onDone }: SwipeDeckProps) {
   const visible = categories.slice(i, i + 3);
 
   return (
-    <div
-      className="flex flex-col items-center gap-6 p-4 outline-none"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "ArrowRight") swipe("like");
-        if (e.key === "ArrowLeft") swipe("skip");
-      }}
-    >
+    <div className="flex flex-col items-center gap-6 p-4">
       <p className="text-sm font-semibold text-slate-500">
         {i + 1} of {categories.length} · {liked.length} liked
       </p>
       <div className="relative h-80 w-72 sm:h-96 sm:w-80">
         {[...visible].reverse().map((cat, idx) => {
           const depth = visible.length - 1 - idx;
-          return <Card key={cat.slug} cat={cat} depth={depth} onSwipe={depth === 0 ? swipe : () => {}} />;
+          return (
+            <Card key={cat.slug} cat={cat} depth={depth} onSwipe={depth === 0 ? swipe : () => {}} />
+          );
         })}
       </div>
       <div className="flex items-center gap-8">
-        <button type="button" aria-label="Not for me" onClick={() => swipe("skip")} className="grid size-16 place-items-center rounded-full border-2 border-rose-200 bg-white text-rose-500 shadow-md transition active:scale-90">
+        <button
+          type="button"
+          aria-label="Not for me"
+          onClick={() => swipe("skip")}
+          className="grid size-16 place-items-center rounded-full border-2 border-rose-200 bg-white text-rose-500 shadow-md transition active:scale-90"
+        >
           <X size={28} />
         </button>
-        <button type="button" aria-label="Sounds good" onClick={() => swipe("like")} className="grid size-20 place-items-center rounded-full border-2 border-emerald-200 bg-white text-emerald-500 shadow-lg transition active:scale-90">
+        <button
+          type="button"
+          aria-label="Sounds good"
+          onClick={() => swipe("like")}
+          className="grid size-20 place-items-center rounded-full border-2 border-emerald-200 bg-white text-emerald-500 shadow-lg transition active:scale-90"
+        >
           <Heart size={34} />
         </button>
       </div>
-      <button type="button" onClick={() => onDone(liked, skipped)} className="text-sm text-slate-400 underline">
+      <button
+        type="button"
+        onClick={() => onDone(liked, skipped)}
+        className="text-sm text-slate-400 underline"
+      >
         Enough, surprise me
       </button>
     </div>

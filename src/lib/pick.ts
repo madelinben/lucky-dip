@@ -22,7 +22,9 @@ export function scoreCandidate(c: Candidate, p: Prefs): number {
     time = 1;
   }
 
-  const interest = c.categorySlugs.length ? Math.max(...c.categorySlugs.map((s) => p.interests[s] ?? NEUTRAL)) : NEUTRAL;
+  const interest = c.categorySlugs.length
+    ? Math.max(...c.categorySlugs.map((s) => p.interests[s] ?? NEUTRAL))
+    : NEUTRAL;
   return interest * time * (c.sponsored ? SPONSORED_BOOST : 1);
 }
 
@@ -30,7 +32,12 @@ export function scoreCandidate(c: Candidate, p: Prefs): number {
  * Up to three picks: weighted-random from the best-scoring pool, nudged towards different categories.
  * `rand` is injected so results are reproducible in tests. `exclude` = ids already shown (reroll).
  */
-export function pickThree(cands: Candidate[], p: Prefs, rand: () => number, exclude: ReadonlySet<string> = new Set()): Candidate[] {
+export function pickThree(
+  cands: Candidate[],
+  p: Prefs,
+  rand: () => number,
+  exclude: ReadonlySet<string> = new Set()
+): Candidate[] {
   const pool = cands
     .filter((c) => !exclude.has(c.id))
     .map((c) => ({ c, s: scoreCandidate(c, p) }))
@@ -40,9 +47,15 @@ export function pickThree(cands: Candidate[], p: Prefs, rand: () => number, excl
 
   const out: Candidate[] = [];
   while (out.length < 3 && pool.length > 0) {
-    const weights = pool.map(({ c, s }) => (out.some((o) => o.categorySlugs[0] === c.categorySlugs[0]) ? s * SAME_CATEGORY_PENALTY : s));
-    let r = rand() * weights.reduce((a, b) => a + b, 0);
-    let i = weights.findIndex((w) => (r -= w) < 0);
+    const weights = pool.map(({ c, s }) =>
+      out.some((o) => o.categorySlugs[0] === c.categorySlugs[0]) ? s * SAME_CATEGORY_PENALTY : s
+    );
+    const target = rand() * weights.reduce((a, b) => a + b, 0);
+    let acc = 0;
+    let i = weights.findIndex((w) => {
+      acc += w;
+      return target < acc;
+    });
     if (i < 0) i = pool.length - 1;
     out.push(pool[i].c);
     pool.splice(i, 1);

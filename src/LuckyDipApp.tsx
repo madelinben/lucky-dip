@@ -26,7 +26,14 @@ export interface LuckyDipAppProps {
 
 const shuffled = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
 
-export function LuckyDipApp({ categories, candidates, initialInterests, onInterests, onChoose, onEvent }: LuckyDipAppProps) {
+export function LuckyDipApp({
+  categories,
+  candidates,
+  initialInterests,
+  onInterests,
+  onChoose,
+  onEvent,
+}: LuckyDipAppProps) {
   const [stage, setStage] = useState<Stage>("swipe");
   const [interests, setInterests] = useState<Record<string, number>>(initialInterests ?? {});
   const [maxPrice, setMaxPrice] = useState<PriceBand>(3);
@@ -52,7 +59,12 @@ export function LuckyDipApp({ categories, candidates, initialInterests, onIntere
   }, []);
 
   function deal(w: When, exclude: Set<string>, nextInterests = interests) {
-    const prefs = { interests: nextInterests, slots: slotsFrom(w.keys), maxPrice: w.maxPrice, party: w.party };
+    const prefs = {
+      interests: nextInterests,
+      slots: slotsFrom(w.keys),
+      maxPrice: w.maxPrice,
+      party: w.party,
+    };
     let next = pickThree(candidates, prefs, Math.random, exclude);
     let ids = new Set([...exclude, ...next.map((c) => c.id)]);
     if (next.length === 0 && exclude.size > 0) {
@@ -66,7 +78,11 @@ export function LuckyDipApp({ categories, candidates, initialInterests, onIntere
   }
 
   function swipeDone(liked: string[], skipped: string[]) {
-    const next = { ...interests, ...Object.fromEntries(skipped.map((s) => [s, SKIPPED])), ...Object.fromEntries(liked.map((s) => [s, LIKED])) };
+    const next = {
+      ...interests,
+      ...Object.fromEntries(skipped.map((s) => [s, SKIPPED])),
+      ...Object.fromEntries(liked.map((s) => [s, LIKED])),
+    };
     setInterests(next);
     save({ interests: next, maxPrice, party });
     onInterests?.(liked, skipped);
@@ -85,12 +101,21 @@ export function LuckyDipApp({ categories, candidates, initialInterests, onIntere
 
   return (
     <div className="bg-white text-slate-900">
-      {stage === "swipe" && <SwipeDeck categories={deck.length ? deck : categories.slice(0, DECK_SIZE)} onDone={swipeDone} />}
+      {stage === "swipe" && (
+        <SwipeDeck
+          categories={deck.length ? deck : categories.slice(0, DECK_SIZE)}
+          onDone={swipeDone}
+        />
+      )}
       {stage === "when" && (
         <>
           <WhenPanel initial={{ maxPrice, party }} onDone={whenDone} />
           <div className="pb-4 text-center">
-            <button type="button" onClick={() => setStage("swipe")} className="text-sm text-slate-400 underline">
+            <button
+              type="button"
+              onClick={() => setStage("swipe")}
+              className="text-sm text-slate-400 underline"
+            >
               Redo my interests
             </button>
           </div>

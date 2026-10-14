@@ -16,8 +16,8 @@ import {
   Sparkles,
   Sun,
   Theater,
-  UtensilsCrossed,
   Users,
+  UtensilsCrossed,
   Waves,
 } from "lucide-react";
 
