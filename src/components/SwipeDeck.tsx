@@ -31,6 +31,7 @@ function Card({
 
   return (
     <div
+      aria-hidden={!top}
       className="absolute inset-0 flex select-none flex-col items-center justify-center gap-5 rounded-3xl border-4 bg-white p-6 shadow-xl"
       style={{
         borderColor: colour,
@@ -71,7 +72,7 @@ function Card({
         <CategoryIcon name={cat.icon} />
       </span>
       <h3 className="text-center text-3xl font-black text-slate-900">{cat.name}</h3>
-      <p className="text-sm text-slate-500">Drag right if you fancy it, left if not</p>
+      <p className="text-center text-sm text-slate-500">Drag right if you fancy it, left if not</p>
     </div>
   );
 }
