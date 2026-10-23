@@ -67,7 +67,7 @@ function FlipCard({
           aria-hidden={up}
           tabIndex={up ? -1 : 0}
           onClick={() => setUp(true)}
-          className="absolute inset-0 grid place-items-center rounded-3xl bg-gradient-to-br from-orange-500 to-rose-600 text-white shadow-xl [backface-visibility:hidden]"
+          className="absolute inset-0 grid place-items-center rounded-3xl bg-gradient-to-br from-orange-500 to-orange-800 text-white shadow-xl [backface-visibility:hidden]"
         >
           <span className="flex flex-col items-center gap-2">
             <Sparkles size={40} />
